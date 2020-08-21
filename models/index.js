@@ -16,12 +16,18 @@ const Page = db.define("page", {
     },
     content: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
+        defaultValue: "No Content"
+
     },
     status: {
         type: Sequelize.ENUM("open", "closed")
     }
 });
+Page.beforeValidate((page)=>{
+    page.slug = page.title.replace(/\s+/g, "_").replace(/\W/g, "")
+});
+
 const User = db.define("user", {
     name: {
         type: Sequelize.STRING,
@@ -36,4 +42,5 @@ const User = db.define("user", {
         }
     }
 });
+Page.belongsTo (User, {as: "author"});
 module.exports = { db, Page, User};
